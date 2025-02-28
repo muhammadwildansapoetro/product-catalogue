@@ -12,11 +12,9 @@ const Pagination: React.FC<PaginationProps> = ({
   const handlePageClick = (page: number) => {
     onPageChange(page);
   };
-
   const handleNextPage = () => {
     if (currentPage < totalPages) onPageChange(currentPage + 1);
   };
-
   const handlePrevPage = () => {
     if (currentPage > 1) onPageChange(currentPage - 1);
   };
