@@ -1,95 +1,45 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import LazyProductCard from "@/components/LazyProductCard";
+import Pagination from "@/components/Pagination";
+import SkeletonCard from "@/components/SkeletonCard";
+import useProducts from "@/hooks/useProducts";
+import { useState } from "react";
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const { products, loading, totalPages } = useProducts(currentPage);
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+  return (
+    <div className="min-h-screen w-screen bg-gray-50 pb-20">
+      <header className="flex w-full items-center justify-center p-5 lg:p-10">
+        <h1 className="text-3xl font-semibold lg:text-5xl">
+          Product Catalogue
+        </h1>
+      </header>
+      <main className="mt-5 px-5 lg:px-10">
+        <div className="flex flex-col justify-center gap-5 lg:flex-row lg:flex-wrap">
+          {loading
+            ? Array.from({ length: 9 }).map((_, index) => (
+                <SkeletonCard key={index} />
+              ))
+            : products.length > 0 &&
+              products.map((product) => (
+                <LazyProductCard key={product.id} product={product} />
+              ))}
         </div>
+
+        {totalPages > 1 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        )}
       </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
