@@ -33,7 +33,7 @@ export default function useProducts(page: number) {
       }
     };
     fetchProducts();
-  }, [page]);
+  }, []);
 
   useEffect(() => {
     const startIndex = (page - 1) * productsPerPage;

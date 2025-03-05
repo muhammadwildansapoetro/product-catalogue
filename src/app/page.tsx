@@ -10,9 +10,6 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const { products, loading, totalPages } = useProducts(currentPage);
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
   return (
     <div className="min-h-screen w-screen bg-gray-50 pb-20">
       <header className="flex w-full items-center justify-center p-5 lg:p-10">
@@ -36,7 +33,7 @@ export default function Home() {
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            onPageChange={handlePageChange}
+            setCurrentPage={setCurrentPage}
           />
         )}
       </main>

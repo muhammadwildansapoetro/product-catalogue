@@ -1,22 +1,24 @@
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
+  setCurrentPage: (page: number) => void;
 }
 
-const Pagination: React.FC<PaginationProps> = ({
+export default function Pagination({
   currentPage,
   totalPages,
-  onPageChange,
-}) => {
+  setCurrentPage,
+}: PaginationProps) {
   const handlePageClick = (page: number) => {
-    onPageChange(page);
+    setCurrentPage(page);
   };
+
   const handleNextPage = () => {
-    if (currentPage < totalPages) onPageChange(currentPage + 1);
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
+
   const handlePrevPage = () => {
-    if (currentPage > 1) onPageChange(currentPage - 1);
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
   return (
@@ -48,6 +50,4 @@ const Pagination: React.FC<PaginationProps> = ({
       </button>
     </div>
   );
-};
-
-export default Pagination;
+}
