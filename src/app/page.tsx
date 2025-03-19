@@ -4,11 +4,22 @@ import LazyProductCard from "@/components/LazyProductCard";
 import Pagination from "@/components/Pagination";
 import SkeletonCard from "@/components/SkeletonCard";
 import useProducts from "@/hooks/useProducts";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const { products, loading, totalPages } = useProducts(currentPage);
+
+  useEffect(() => {
+    const savedPage = Number(localStorage.getItem("currentPage")) || 1;
+    if (savedPage !== currentPage) {
+      setCurrentPage(savedPage);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("currentPage", String(currentPage));
+  }, [currentPage]);
 
   return (
     <div className="min-h-screen w-screen bg-gray-50 pb-20">

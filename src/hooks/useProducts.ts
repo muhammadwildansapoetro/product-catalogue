@@ -20,12 +20,32 @@ export default function useProducts(page: number) {
   const [allProducts, setAllProducts] = useState<IProduct[]>([]);
   const productsPerPage = 9;
 
+  // useEffect(() => {
+  //   const fetchProducts = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const response = await axios.get(`/products`);
+  //       setAllProducts(response.data);
+  //     } catch (error) {
+  //       console.error("Error fetching products:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchProducts();
+  // }, []);
+
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`/products`);
-        setAllProducts(response.data);
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL_API}/products`,
+        );
+        if (response.ok) {
+          const data: IProduct[] = await response.json();
+          setAllProducts(data);
+        }
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
@@ -36,12 +56,14 @@ export default function useProducts(page: number) {
   }, []);
 
   useEffect(() => {
-    const startIndex = (page - 1) * productsPerPage;
-    const paginatedProducts = allProducts.slice(
-      startIndex,
-      startIndex + productsPerPage,
-    );
-    setProducts(paginatedProducts);
+    if (allProducts.length > 0) {
+      const startIndex = (page - 1) * productsPerPage;
+      const paginatedProducts = allProducts.slice(
+        startIndex,
+        startIndex + productsPerPage,
+      );
+      setProducts(paginatedProducts);
+    }
   }, [page, allProducts]);
 
   const totalPages = Math.ceil(allProducts.length / productsPerPage);
